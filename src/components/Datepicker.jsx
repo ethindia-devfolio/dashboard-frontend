@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const MonthYearSelector = ({ onDateChange }) => {
   const [month, setMonth] = useState('');
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState("2014");
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',

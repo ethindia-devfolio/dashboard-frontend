@@ -15,6 +15,28 @@ function SelectEndpoint() {
     navigate(`/transformation?endpoint=${name}`);
   };
 
+  const [csvData, setCsvData] = useState(null);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const content = event.target.result;
+        parseCSV(content);
+      };
+
+      reader.readAsText(file);
+    }
+  };
+
+  const parseCSV = (data) => {
+    const rows = data.split('\n').map((row) => row.split(','));
+    setCsvData(rows);
+    console.log('Parsed CSV Data:', rows);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -54,7 +76,7 @@ function SelectEndpoint() {
                     {endpoints.map((endpoint, index) => (
                       <tr key={index}>
                         <td
-                          className="border px-4 py-2 text-gray-800 hover:text-gray-600 cursor-pointer tracking-wider"
+                          className="border px-4 py-4 text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-300 cursor-pointer tracking-wider"
                           onClick={() => handleEndpointClick(endpoint)}
                         >
                           {endpoint}
@@ -91,7 +113,7 @@ function SelectEndpoint() {
 
               <form className="w-full">
                 <div className="mb-4">
-                  <label htmlFor="name" className="px-2 py-2 text-gray-700 tracking-wider pb-6 text-left text-sm uppercase">
+                  <label htmlFor="name" className="px-2 py-2 text-gray-700 dark:text-gray-200 tracking-wider pb-6 text-left text-sm uppercase">
                     Name
                   </label>
                   <input
@@ -104,7 +126,7 @@ function SelectEndpoint() {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="ip" className="px-2 py-2 text-gray-700 tracking-wider pb-6 text-left text-sm uppercase">
+                  <label htmlFor="ip" className="px-2 py-2 text-gray-700 tracking-wider dark:text-gray-200 pb-6 text-left text-sm uppercase">
                     IP Address
                   </label>
                   <input
@@ -117,7 +139,7 @@ function SelectEndpoint() {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="extra" className="px-2 py-2 text-gray-700 tracking-wider pb-6 text-left text-sm uppercase">
+                  <label htmlFor="extra" className="px-2 py-2 text-gray-700 tracking-wider dark:text-gray-200 pb-6 text-left text-sm uppercase">
                     Extra
                   </label>
                   <input
@@ -140,24 +162,34 @@ function SelectEndpoint() {
               </form>
             </div>
             <div className="flex align-center justify-center">
-                <hr />
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6 inline text-md font-thin tracking-wide">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 inline text-md font-thin tracking-wide">
                     OR
                 </h2>
-                <hr />
             </div>
-            <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg rounded-xl items-center m-6 p-6 w-full">
-              <div className="sm:flex sm:justify-between x mb-8 w-full">
-                <div className="mb-4 sm:mb-0">
+            <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 items-center m-6 w-full justify-center text-center">
+              <div className="sm:flex sm:justify-between mb-8 w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg rounded-xl p-6">
+                <div className="mb-4 sm:mb-0 w-full">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6 inline text-md font-thin tracking-wide">
-                    UPLOAD ENDPOINT
+                    UPLOAD ENDPOINT CSV
                   </h2>
+                  <div className='block w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-4'>
+                  <input
+                    type="file"
+                    accept=".png"
+                    onChange={handleFileUpload}
+                  />
+                  </div>
+                  <div>
+                  <button
+                    className="btn-xl bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-2 hover:bg-gray-600 hover:dark:bg-gray-300 w-full mt-4"
+                    onClick={() => setCreateEndpoint(!createEndpoint)}
+                  >
+                    Upload and Create
+                  </button>
+                </div>
                 </div>
               </div>
-
-
             </div>
-
           </div>
         )}
       </div>

@@ -86,7 +86,7 @@ function Transformations() {
                         </td>
                         <td className="px-2 py-2 text-gray-800 tracking-wider flex justify-end">
                             <button
-                                className="btn-md bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-2 hover:bg-gray-600 hover:dark:bg-gray-300 text-sm"
+                                className="btn-md bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-3 mr-4 hover:bg-gray-600 hover:dark:bg-gray-300 text-sm"
                                 onClick={() => setVisualise(!visualise)}
                             >
                                 Visualise
