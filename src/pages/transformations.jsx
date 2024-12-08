@@ -6,6 +6,9 @@ import notFound from '../images/notFound.png';
 import Map from '../components/Map';
 import DatePicker from '../components/Datepicker';
 import optionGhost from '../images/optionGhost.png';
+import optionGhost2 from '../images/optionGhost2.png';
+import optionGhost3 from '../images/optionGhost3.png';
+import optionGhost4 from '../images/optionGhost4.png';
 import customGhost from '../images/customGhost.png';
 
 function Transformations() {
@@ -123,17 +126,35 @@ function Transformations() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-24 m-24">
-                    <div className="w-80 h-80 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                <div className="grid grid-cols-3 gap-16 m-4">
+                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">FILTER AND SUMMARISE</p>
-                        <div className="flex justify-center w-full h-64 p-2">
+                        <div className="flex justify-center w-full h-64 p-4 pt-10">
                             <img src={optionGhost} alt="Option transformation" />
                         </div>
                     </div>
-                    <div className="w-80 h-80 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
-                        <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">ADD CUSTOM</p>
+                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                        <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">FUTURE PREDICTION</p>
                         <div className="flex justify-center w-full h-64 p-4">
-                            <img src={customGhost} alt="Option transformation"/>
+                            <img src={optionGhost2} alt="Option transformation"/>
+                        </div>
+                    </div>
+                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                        <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">COMPARE DATAPOINTS</p>
+                        <div className="flex justify-center w-full h-64 pb-4 pt-10">
+                            <img src={optionGhost3} alt="Option transformation" />
+                        </div>
+                    </div>
+                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                        <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">CAUSAL ANALYSIS</p>
+                        <div className="flex justify-center w-full h-64 p-4">
+                            <img src={optionGhost4} alt="Option transformation"/>
+                        </div>
+                    </div>
+                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                        <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">ADD CUSTOM</p>
+                        <div className="flex justify-center w-full h-64 p-2">
+                            <img src={customGhost} alt="Option transformation" />
                         </div>
                     </div>
                 </div>
