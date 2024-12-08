@@ -10,7 +10,7 @@ function DashboardCard11() {
     labels: ['Reasons'],
     datasets: [
       {
-        label: 'Having difficulties using the product',
+        label: 'SE',
         data: [131],
         backgroundColor: tailwindConfig().theme.colors.violet[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.violet[600],
@@ -18,7 +18,7 @@ function DashboardCard11() {
         categoryPercentage: 1,
       },
       {
-        label: 'Missing features I need',
+        label: 'SSE',
         data: [100],
         backgroundColor: tailwindConfig().theme.colors.violet[700],
         hoverBackgroundColor: tailwindConfig().theme.colors.violet[800],
@@ -26,7 +26,7 @@ function DashboardCard11() {
         categoryPercentage: 1,
       },
       {
-        label: 'Not satisfied about the quality of the product',
+        label: 'NE',
         data: [81],
         backgroundColor: tailwindConfig().theme.colors.sky[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.sky[600],
@@ -34,7 +34,7 @@ function DashboardCard11() {
         categoryPercentage: 1,
       },
       {
-        label: 'The product doesn’t look as advertised',
+        label: 'E',
         data: [65],
         backgroundColor: tailwindConfig().theme.colors.green[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.green[600],
@@ -55,14 +55,13 @@ function DashboardCard11() {
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
       <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60 flex items-center">
-        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Reason for Refunds</h2>
+        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Wind Direction Analysis</h2>
       </header>
       <div className="px-5 py-3">
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">449</div>
-          <div className="text-sm font-medium text-red-700 px-1.5 bg-red-500/20 rounded-full">-22%</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">30 days</div>
         </div>
-      </div>      
+      </div>
       {/* Chart built with Chart.js 3 */}
       <div className="grow">
         {/* Change the height attribute to adjust the chart height */}

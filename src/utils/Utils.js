@@ -29,6 +29,6 @@ export const formatValue = (value) => Intl.NumberFormat('en-US', {
 }).format(value);
 
 export const formatThousands = (value) => Intl.NumberFormat('en-US', {
-  maximumSignificantDigits: 3,
+  maximumSignificantDigits: 1,
   notation: 'compact',
 }).format(value);

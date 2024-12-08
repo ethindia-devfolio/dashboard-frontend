@@ -41,7 +41,7 @@ function DashboardCard01() {
     datasets: [
       // Indigo line
       {
-        data: [732, 610, 610, 504, 504, 504, 349, 349, 504, 342, 504, 610, 391, 192, 154, 273, 191, 191, 126, 263, 349, 252, 423, 622, 470, 532],
+        data: [732, 610, 610, 504, 504, 504, 349, 349, 504, 342, 504, 610, 391, 392, 354, 373, 211, 491, 126, 363, 349, 252, 423, 622, 470, 632],
         fill: true,
         backgroundColor: function(context) {
           const chart = context.chart;
@@ -64,7 +64,7 @@ function DashboardCard01() {
       },
       // Gray line
       {
-        data: [532, 532, 532, 404, 404, 314, 314, 314, 314, 314, 234, 314, 234, 234, 314, 314, 314, 388, 314, 202, 202, 202, 202, 314, 720, 642],
+        data: [532, 532, 532, 404, 404, 314, 314, 314, 314, 314, 234, 314, 234, 234, 314, 314, 114, 188, 14, 202, 202, 202, 202, 314, 320, 442],
         borderColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.gray[500])}, 0.25)`,
         borderWidth: 2,
         pointRadius: 0,
@@ -83,12 +83,12 @@ function DashboardCard01() {
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
       <div className="px-5 pt-5">
         <header className="flex justify-between items-start mb-2">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Acme Plus</h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Temperature Analysis</h2>
         </header>
-        <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">Sales</div>
+        <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">Avg. Temp</div>
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">$24,780</div>
-          <div className="text-sm font-medium text-green-700 px-1.5 bg-green-500/20 rounded-full">+49%</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">13.172°</div>
+          <div className="text-sm font-medium text-green-700 px-1.5 bg-green-500/20 rounded-full">+4%</div>
         </div>
       </div>
       {/* Chart built with Chart.js 3 */}
