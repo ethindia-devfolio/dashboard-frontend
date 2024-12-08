@@ -1,4 +1,5 @@
 import React from 'react';
+import displayData from '../../displayData.json';
 
 function DashboardCard13() {
   return (
@@ -17,13 +18,7 @@ function DashboardCard13() {
               <div className="grow flex items-center border-b border-gray-100 dark:border-gray-700/60 text-md py-2">
                 <div className="grow flex justify-between">
                   <div className="self-center">
-                    EcoChain addresses the challenge of accessing and sharing comprehensive environmental data in a secure, transparent, and decentralized manner.
-                    Traditional environmental data repositories often suffer from issues such as data silos, inaccessibility, and centralized control. This limits
-                    collaboration and slows down the pace of global environmental initiatives. EcoChain enables:
-                    Researchers, policymakers, and NGOs to access accurate and real-time environmental data to make informed decisions.
-                    Real-time monitoring and analysis of environmental factors like climate change, pollution, and biodiversity loss.
-                    A collaborative space for citizens and organizations to contribute and validate environmental data, ensuring that the data is trustworthy and transparent.
-                    A decentralized solution that reduces the risks of data manipulation and centralization.
+                    {displayData.report}
                   </div>
                 </div>
               </div>

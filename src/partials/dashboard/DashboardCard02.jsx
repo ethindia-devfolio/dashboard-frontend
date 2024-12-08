@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LineChart from '../../charts/LineChart01';
 import { chartAreaGradient } from '../../charts/ChartjsConfig';
-import EditMenu from '../../components/DropdownEditMenu';
+import displayData from '../../displayData.json';
 
 // Import utilities
 import { tailwindConfig, hexToRGB } from '../../utils/Utils';
@@ -19,17 +19,13 @@ function DashboardCard02() {
       '03-01-2024', '04-01-2024', '05-01-2024',
       '06-01-2024', '07-01-2024', '08-01-2024',
       '09-01-2024', '10-01-2024', '11-01-2024',
-      '12-01-2024', '01-01-2025',
+      '12-01-2024', '01-01-2025', '11-01-2025',
+      '12-01-2025', '01-01-2026', '01-01-2026',
     ],
     datasets: [
       // Indigo line
       {
-        data: [
-          622, 622, 426, 471, 365, 365, 238,
-          324, 288, 206, 324, 324, 500, 409,
-          409, 273, 232, 273, 500, 570, 767,
-          808, 685, 767, 685, 685,
-        ],
+        data: displayData.wind_speed,
         fill: true,
         backgroundColor: function(context) {
           const chart = context.chart;

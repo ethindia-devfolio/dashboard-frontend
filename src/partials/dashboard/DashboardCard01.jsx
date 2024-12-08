@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LineChart from '../../charts/LineChart01';
 import { chartAreaGradient } from '../../charts/ChartjsConfig';
-import EditMenu from '../../components/DropdownEditMenu';
+import displayData from '../../displayData.json';
 
 // Import utilities
 import { tailwindConfig, hexToRGB } from '../../utils/Utils';
@@ -37,11 +37,14 @@ function DashboardCard01() {
       '11-01-2024',
       '12-01-2024',
       '01-01-2025',
+      '11-01-2025',
+      '12-01-2025',
+      '01-01-2026',
+      '01-01-2026',
     ],
     datasets: [
-      // Indigo line
       {
-        data: [732, 610, 610, 504, 504, 504, 349, 349, 504, 342, 504, 610, 391, 392, 354, 373, 211, 491, 126, 363, 349, 252, 423, 622, 470, 632],
+        data: displayData.max_temp,
         fill: true,
         backgroundColor: function(context) {
           const chart = context.chart;
@@ -62,9 +65,8 @@ function DashboardCard01() {
         clip: 20,
         tension: 0.2,
       },
-      // Gray line
       {
-        data: [532, 532, 532, 404, 404, 314, 314, 314, 314, 314, 234, 314, 234, 234, 314, 314, 114, 188, 14, 202, 202, 202, 202, 314, 320, 442],
+        data: displayData.min_temp,
         borderColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.gray[500])}, 0.25)`,
         borderWidth: 2,
         pointRadius: 0,

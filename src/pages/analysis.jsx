@@ -61,12 +61,13 @@ function Analysis() {
             </div>
           </div>
           <div className="grid grid-cols-12 gap-6">
+          <DashboardCard13 />
             <DashboardCard01 />
             <DashboardCard02 />
             <DashboardCard03 />
             <DashboardCard09 />
             <DashboardCard11 />
-            <DashboardCard13 />
+
           </div>
         </div>
       </div>

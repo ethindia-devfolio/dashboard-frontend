@@ -1,41 +1,45 @@
 import React from 'react';
 import BarChart from '../../charts/BarChart03';
+import displayData from '../../displayData.json';
 
-// Import utilities
 import { tailwindConfig } from '../../utils/Utils';
 
 function DashboardCard11() {
+
+  const windDirectionSum = displayData.wind_direction
+  .slice(4)
+  .reduce((sum, value) => sum + value, 0);
 
   const chartData = {
     labels: ['Reasons'],
     datasets: [
       {
-        label: 'SE',
-        data: [131],
+        label: 'N',
+        data: [displayData.wind_direction[0]],
         backgroundColor: tailwindConfig().theme.colors.violet[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.violet[600],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
-        label: 'SSE',
-        data: [100],
+        label: 'E',
+        data: [displayData.wind_direction[1]],
         backgroundColor: tailwindConfig().theme.colors.violet[700],
         hoverBackgroundColor: tailwindConfig().theme.colors.violet[800],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
-        label: 'NE',
-        data: [81],
+        label: 'S',
+        data: [displayData.wind_direction[2]],
         backgroundColor: tailwindConfig().theme.colors.sky[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.sky[600],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
-        label: 'E',
-        data: [65],
+        label: 'W',
+        data: [displayData.wind_direction[3]],
         backgroundColor: tailwindConfig().theme.colors.green[500],
         hoverBackgroundColor: tailwindConfig().theme.colors.green[600],
         barPercentage: 1,
@@ -43,7 +47,7 @@ function DashboardCard11() {
       },
       {
         label: 'Other',
-        data: [72],
+        data: [windDirectionSum],
         backgroundColor: tailwindConfig().theme.colors.gray[200],
         hoverBackgroundColor: tailwindConfig().theme.colors.gray[300],
         barPercentage: 1,
@@ -59,7 +63,8 @@ function DashboardCard11() {
       </header>
       <div className="px-5 py-3">
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">30 days</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">{displayData.min_temp.length} days</div>
+
         </div>
       </div>
       {/* Chart built with Chart.js 3 */}
