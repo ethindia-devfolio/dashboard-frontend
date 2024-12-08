@@ -26,6 +26,21 @@ function Analysis() {
     return () => clearTimeout(timer);
   }, []);
 
+  handleGetAnalysis()
+
+  const handleGetAnalysis = async () => {
+    try {
+        await axios.get(`http://0.0.0.0:8000/analysis`, {
+            name: transformationName,
+            date: selectedDate,
+            location: selectedLocation
+        });
+        const fetchResponse = await axios.get(`http://0.0.0.0:8000/data_sources/${endpoint}/versions`);
+    } catch (error) {
+        console.error('Error creating analysis:', error);
+    }
+};
+
   if (isLoading) {
     return (
       <div className="flex flex-col h-screen items-center justify-center">
@@ -61,12 +76,12 @@ function Analysis() {
             </div>
           </div>
           <div className="grid grid-cols-12 gap-6">
-          <DashboardCard13 />
-            <DashboardCard01 />
-            <DashboardCard02 />
-            <DashboardCard03 />
-            <DashboardCard09 />
-            <DashboardCard11 />
+            <DashboardCard13 displayData = {fetchResponse} />
+            <DashboardCard01 displayData = {fetchResponse}/>
+            <DashboardCard02 displayData = {fetchResponse}/>
+            <DashboardCard03 displayData = {fetchResponse}/>
+            <DashboardCard09 displayData = {fetchResponse}/>
+            <DashboardCard11 displayData = {fetchResponse}/>
 
           </div>
         </div>

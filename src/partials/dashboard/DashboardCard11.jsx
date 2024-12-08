@@ -1,10 +1,9 @@
 import React from 'react';
 import BarChart from '../../charts/BarChart03';
-import displayData from '../../displayData.json';
 
 import { tailwindConfig } from '../../utils/Utils';
 
-function DashboardCard11() {
+function DashboardCard11(displayData) {
 
   const windDirectionSum = displayData.wind_direction
   .slice(4)

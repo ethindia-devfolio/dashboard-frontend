@@ -10,11 +10,13 @@ import optionGhost3 from '../images/optionGhost3.png';
 import optionGhost4 from '../images/optionGhost4.png';
 import customGhost from '../images/customGhost.png';
 import axios from 'axios';
+import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 function Transformations() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [createTransformation, setCreateTransformation] = useState(false);
+    const [fetchAnalysis, setFetchAnalysis] = useState(false);
     const [visualise, setVisualise] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedLocation, setSelectedLocation] = useState('');
@@ -38,6 +40,7 @@ function Transformations() {
 
     const handleTransformationClick = () => {
         console.log(selectedDate, selectedLocation);
+        handleFetchAnalysis(selectedDate, selectedLocation);
         navigate(`/analysis?trans=${encodeURIComponent(endpoint)}&location=${encodeURIComponent(selectedLocation)}&date=${encodeURIComponent(selectedDate)}`);
     };
 
@@ -51,19 +54,35 @@ function Transformations() {
         return location;
     }
 
-    const handleSubmitTransformation = async () => {
+    const handleFetchAnalysis = async () => {
+      try {
+          await axios.post(`http://0.0.0.0:8000/transformations`, {
+              name: transformationName,
+              type: selectedType,
+              data_source_name: endpoint
+          });
+          const fetchResponse = await axios.get(`http://0.0.0.0:8000/data_sources/${endpoint}/versions`);
+          const versions = fetchResponse.data.map((version) => ({name: version.name, type: version.type}));
+          setCreateTransformation(false);
+          setEndpointVersions(versions);
+      } catch (error) {
+          console.error('Error creating transformation:', error);
+      }
+  };
+
+    const handleSubmitTransformation = async (selectedDate, selectedLocation) => {
         try {
-            await axios.post(`http://0.0.0.0:8000/transformations`, {
+            await axios.post(`http://0.0.0.0:8000/analysis`, {
                 name: transformationName,
-                type: selectedType,
-                data_source_name: endpoint
+                date: selectedDate,
+                location: selectedLocation
             });
             const fetchResponse = await axios.get(`http://0.0.0.0:8000/data_sources/${endpoint}/versions`);
             const versions = fetchResponse.data.map((version) => ({name: version.name, type: version.type}));
-            setCreateTransformation(false);
+            setFetchAnalysis(false);
             setEndpointVersions(versions);
         } catch (error) {
-            console.error('Error creating transformation:', error);
+            console.error('Error creating analysis:', error);
         }
     };
 
@@ -166,7 +185,7 @@ function Transformations() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-16 m-4">
-                    <div 
+                    <div
                         className={`w-72 h-72 ${selectedType === 'FILTER_AND_SUMMARISE' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
                         onClick={() => setSelectedType('FILTER_AND_SUMMARISE')}
                     >
@@ -175,7 +194,7 @@ function Transformations() {
                             <img src={optionGhost} alt="Option transformation" />
                         </div>
                     </div>
-                    <div 
+                    <div
                         className={`w-72 h-72 ${selectedType === 'FUTURE_PREDICTION' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
                         onClick={() => setSelectedType('FUTURE_PREDICTION')}
                     >
@@ -184,7 +203,7 @@ function Transformations() {
                             <img src={optionGhost2} alt="Option transformation"/>
                         </div>
                     </div>
-                    <div 
+                    <div
                         className={`w-72 h-72 ${selectedType === 'COMPARE_DATAPOINTS' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
                         onClick={() => setSelectedType('COMPARE_DATAPOINTS')}
                     >
@@ -193,7 +212,7 @@ function Transformations() {
                             <img src={optionGhost3} alt="Option transformation" />
                         </div>
                     </div>
-                    <div 
+                    <div
                         className={`w-72 h-72 ${selectedType === 'CAUSAL_ANALYSIS' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
                         onClick={() => setSelectedType('CAUSAL_ANALYSIS')}
                     >
@@ -202,7 +221,7 @@ function Transformations() {
                             <img src={optionGhost4} alt="Option transformation"/>
                         </div>
                     </div>
-                    <div 
+                    <div
                         className={`w-72 h-72 ${selectedType === 'ADD_CUSTOM' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
                         onClick={() => setSelectedType('ADD_CUSTOM')}
                     >

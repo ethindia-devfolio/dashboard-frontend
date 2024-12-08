@@ -1,11 +1,10 @@
 import React from 'react';
 import Tooltip from '../../components/Tooltip';
 import BarChart from '../../charts/BarChart02';
-import displayData from '../../displayData.json';
 
 import { tailwindConfig } from '../../utils/Utils';
 
-function DashboardCard09() {
+function DashboardCard09(displayData) {
 
   const avgMaxTemp = displayData.max_temp.reduce((sum, temp) => sum + temp, 0) / displayData.max_temp.length;
   const avgMinTemp = displayData.min_temp.reduce((sum, temp) => sum + temp, 0) / displayData.min_temp.length;

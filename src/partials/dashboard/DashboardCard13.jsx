@@ -1,7 +1,6 @@
 import React from 'react';
-import displayData from '../../displayData.json';
 
-function DashboardCard13() {
+function DashboardCard13(displayData) {
   return (
     <div className="col-span-full xl:col-span-12 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
       <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
