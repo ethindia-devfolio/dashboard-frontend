@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "axios": "^1.7.9",
     "chart.js": "^4.4.1",
     "chartjs-adapter-moment": "^1.0.1",
     "heroicons": "^2.2.0",

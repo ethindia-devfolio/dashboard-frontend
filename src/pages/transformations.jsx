@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../partials/Header';
-import endpoints from '../endpoints.json';
 import notFound from '../images/notFound.png';
 import Map from '../components/Map';
 import DatePicker from '../components/Datepicker';
@@ -10,6 +9,7 @@ import optionGhost2 from '../images/optionGhost2.png';
 import optionGhost3 from '../images/optionGhost3.png';
 import optionGhost4 from '../images/optionGhost4.png';
 import customGhost from '../images/customGhost.png';
+import axios from 'axios';
 
 function Transformations() {
 
@@ -18,10 +18,23 @@ function Transformations() {
     const [visualise, setVisualise] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedLocation, setSelectedLocation] = useState('');
-
+    const [endpointVersions, setEndpointVersions] = useState([]);
+    const [transformationName, setTransformationName] = useState('');
+    const [selectedType, setSelectedType] = useState('');
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(window.location.search);
     const endpoint = queryParams.get('endpoint');
+
+
+    useEffect(() => {
+        const fetchEndpointVersions = async () => {
+            const response = await axios.get(`http://0.0.0.0:8000/data_sources/${endpoint}/versions`);
+            console.log(response.data);
+            const versions = response.data.map((version) => ({name: version.name, type: version.transformation_type}));
+            setEndpointVersions(versions);
+        };
+        fetchEndpointVersions();
+    }, [endpoint]);
 
     const handleTransformationClick = () => {
         console.log(selectedDate, selectedLocation);
@@ -37,6 +50,22 @@ function Transformations() {
         setSelectedLocation(location);
         return location;
     }
+
+    const handleSubmitTransformation = async () => {
+        try {
+            await axios.post(`http://0.0.0.0:8000/transformations`, {
+                name: transformationName,
+                type: selectedType,
+                data_source_name: endpoint
+            });
+            const fetchResponse = await axios.get(`http://0.0.0.0:8000/data_sources/${endpoint}/versions`);
+            const versions = fetchResponse.data.map((version) => ({name: version.name, type: version.type}));
+            setCreateTransformation(false);
+            setEndpointVersions(versions);
+        } catch (error) {
+            console.error('Error creating transformation:', error);
+        }
+    };
 
     return (
       <div className="flex h-screen overflow-hidden">
@@ -66,7 +95,7 @@ function Transformations() {
                   overflowY: 'auto',
                 }}
               >
-                {endpoints && endpoints.length > 0 ? (
+                {endpointVersions && endpointVersions.length > 0 ? (
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr>
@@ -76,16 +105,16 @@ function Transformations() {
                       </tr>
                     </thead>
                     <tbody>
-                      {endpoints.map((endpoint, index) => (
+                      {endpointVersions.map((endpoint, index) => (
                         <tr className="border px-4 py-2 tracking-wider text-white">
                         <td
                           className="px-4 py-2 text-gray-800 dark:text-gray-100 tracking-wider"
 
                         >
-                          {endpoint}
+                          {endpoint.name}
                         </td>
                         <td className="px-4 py-2 text-gray-800 dark:text-gray-100 tracking-wider">
-                            TypeX
+                            {endpoint.type}
                         </td>
                         <td className="px-2 py-2 text-gray-800 tracking-wider flex justify-end">
                             <button
@@ -126,32 +155,57 @@ function Transformations() {
                   </button>
                 </div>
 
+                <div className="w-full mb-6">
+                    <input
+                        type="text"
+                        placeholder="Enter transformation name"
+                        value={transformationName}
+                        onChange={(e) => setTransformationName(e.target.value)}
+                        className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                    />
+                </div>
+
                 <div className="grid grid-cols-3 gap-16 m-4">
-                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                    <div 
+                        className={`w-72 h-72 ${selectedType === 'FILTER_AND_SUMMARISE' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
+                        onClick={() => setSelectedType('FILTER_AND_SUMMARISE')}
+                    >
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">FILTER AND SUMMARISE</p>
                         <div className="flex justify-center w-full h-64 p-4 pt-10">
                             <img src={optionGhost} alt="Option transformation" />
                         </div>
                     </div>
-                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                    <div 
+                        className={`w-72 h-72 ${selectedType === 'FUTURE_PREDICTION' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
+                        onClick={() => setSelectedType('FUTURE_PREDICTION')}
+                    >
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">FUTURE PREDICTION</p>
                         <div className="flex justify-center w-full h-64 p-4">
                             <img src={optionGhost2} alt="Option transformation"/>
                         </div>
                     </div>
-                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                    <div 
+                        className={`w-72 h-72 ${selectedType === 'COMPARE_DATAPOINTS' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
+                        onClick={() => setSelectedType('COMPARE_DATAPOINTS')}
+                    >
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">COMPARE DATAPOINTS</p>
                         <div className="flex justify-center w-full h-64 pb-4 pt-10">
                             <img src={optionGhost3} alt="Option transformation" />
                         </div>
                     </div>
-                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                    <div 
+                        className={`w-72 h-72 ${selectedType === 'CAUSAL_ANALYSIS' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
+                        onClick={() => setSelectedType('CAUSAL_ANALYSIS')}
+                    >
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">CAUSAL ANALYSIS</p>
                         <div className="flex justify-center w-full h-64 p-4">
                             <img src={optionGhost4} alt="Option transformation"/>
                         </div>
                     </div>
-                    <div className="w-72 h-72 bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col">
+                    <div 
+                        className={`w-72 h-72 ${selectedType === 'ADD_CUSTOM' ? 'ring-4 ring-blue-500' : ''} bg-gray-700 hover:bg-gray-800 dark:bg-slate-300 rounded-xl hover:dark:bg-slate-200 cursor-pointer dark:text-gray-700 text-gray-300 flex justify-center align-center flex-col`}
+                        onClick={() => setSelectedType('ADD_CUSTOM')}
+                    >
                         <p className="px-4 py-1 text-left text-md font-bold tracking-wide align-left">ADD CUSTOM</p>
                         <div className="flex justify-center w-full h-64 p-2">
                             <img src={customGhost} alt="Option transformation" />
@@ -159,6 +213,15 @@ function Transformations() {
                     </div>
                 </div>
 
+                <div className="w-full mt-6">
+                    <button
+                        className="btn-xl bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-2 hover:bg-gray-600 hover:dark:bg-gray-300 w-full uppercase h-12 tracking-wider"
+                        onClick={handleSubmitTransformation}
+                        disabled={!transformationName || !selectedType}
+                    >
+                        Create Transformation
+                    </button>
+                </div>
               </div>
             </div>
           )}

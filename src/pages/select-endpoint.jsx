@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Header from '../partials/Header';
-import endpoints from '../endpoints.json';
 import notFound from '../images/notFound.png';
+import axios from 'axios';
 
 function SelectEndpoint() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [createEndpoint, setCreateEndpoint] = useState(false);
+  const [endpoints, setEndpoints] = useState([]);
+  const [csvFile, setCsvFile] = useState(null);
+  // Fetch endpoints from backend
+  useEffect(() => {
+    const fetchEndpoints = async () => {
+      const response = await axios.get('http://0.0.0.0:8000/data_sources');
+      // fetch the endpoints from the response
+      const endpoints = response.data.map((endpoint) => endpoint.name);
+      setEndpoints(endpoints);
+    };
+    fetchEndpoints();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -15,27 +27,87 @@ function SelectEndpoint() {
     navigate(`/transformation?endpoint=${name}`);
   };
 
-  const [csvData, setCsvData] = useState(null);
+  // Add state for form inputs
+  const [formData, setFormData] = useState({
+    name: '',
+    ip: '',
+    extra: ''
+  });
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
+  const [uploadFormData, setUploadFormData] = useState({
+    endpointName: '',
+    file: null
+  });
 
-      reader.onload = (event) => {
-        const content = event.target.result;
-        parseCSV(content);
-      };
+  // Add handler for input changes
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+    [e.target.name]: e.target.value
+  });
+};
 
-      reader.readAsText(file);
-    }
+  // Add handler for upload input changes and file upload
+  const handleUploadInput = (e) => {
+    setUploadFormData({
+      ...uploadFormData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const parseCSV = (data) => {
-    const rows = data.split('\n').map((row) => row.split(','));
-    setCsvData(rows);
-    console.log('Parsed CSV Data:', rows);
-  };
+  const handleFileUpload = (e) => {  
+    const file = e.target.files[0];  
+    if (file) {  
+      setCsvFile(file); // Store the file object directly  
+    }  
+  };  
+
+
+  const handleCreateEndpoint = async (data_source_name) => {
+    const response = await axios.post('http://0.0.0.0:8000/create', {
+      data_source_name: data_source_name
+    });
+
+    console.log(response);
+    // Fetch endpoints again after creating a new one
+    const fetchResponse = await axios.get('http://0.0.0.0:8000/data_sources');
+    const updatedEndpoints = fetchResponse.data.map((endpoint) => endpoint.name);
+    setEndpoints(updatedEndpoints);
+    setCreateEndpoint(false);
+  }
+
+
+  // Add new function to handle CSV upload
+const handleCsvUpload = async (e) => {
+  e.preventDefault();
+  if (!csvFile) {
+    console.error('No CSV file selected');
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('file', csvFile); // Append the file object
+    formData.append('endpoint_name', uploadFormData.endpointName); // Add endpoint name to request
+
+    const response = await axios.post('http://0.0.0.0:8000/data', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('File uploaded successfully:', response.data);
+
+    // Refresh endpoints list after successful upload
+    const fetchResponse = await axios.get('http://0.0.0.0:8000/data_sources');
+    const updatedEndpoints = fetchResponse.data.map((endpoint) => endpoint.name);
+    setEndpoints(updatedEndpoints);
+    setCreateEndpoint(false);
+  } catch (error) {
+    console.error('Error uploading CSV:', error);
+  }
+};
+    
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -52,7 +124,7 @@ function SelectEndpoint() {
               </div>
               <button
                 className="btn-xl bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-4 hover:bg-gray-600 hover:dark:bg-gray-300"
-                onClick={() => setCreateEndpoint(!createEndpoint)}
+                onClick={() => {setCreateEndpoint(!createEndpoint);}}
               >
                 Create New Endpoint
               </button>
@@ -120,6 +192,8 @@ function SelectEndpoint() {
                     type="text"
                     id="name"
                     name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 text-gray-800 dark:text-gray-200 dark:bg-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter your name"
                   />
@@ -133,6 +207,8 @@ function SelectEndpoint() {
                     type="text"
                     id="ip"
                     name="ip"
+                    value={formData.ip}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 text-gray-800 dark:text-gray-200 dark:bg-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter IP address"
                   />
@@ -140,21 +216,26 @@ function SelectEndpoint() {
 
                 <div className="mb-4">
                   <label htmlFor="extra" className="px-2 py-2 text-gray-700 tracking-wider dark:text-gray-200 pb-6 text-left text-sm uppercase">
-                    Extra
+                    Connection URI
                   </label>
                   <input
                     type="text"
                     id="extra"
                     name="extra"
+                    value={formData.extra}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 text-gray-800 dark:text-gray-200 dark:bg-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter additional information"
+                    placeholder="Enter connection URI"
                   />
                 </div>
 
                 <div>
                   <button
                     className="btn-xl bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-2 hover:bg-gray-600 hover:dark:bg-gray-300 w-full mt-4"
-                    onClick={() => setCreateEndpoint(!createEndpoint)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleCreateEndpoint(formData.name);
+                    }}
                   >
                     Create New Endpoint
                   </button>
@@ -167,22 +248,33 @@ function SelectEndpoint() {
                 </h2>
             </div>
             <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 items-center m-6 w-full justify-center text-center">
-              <div className="sm:flex sm:justify-between mb-8 w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg rounded-xl p-6">
+              <div className="sm:flex sm:justify-between mb-8 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg rounded-xl p-6">
                 <div className="mb-4 sm:mb-0 w-full">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6 inline text-md font-thin tracking-wide">
                     UPLOAD ENDPOINT CSV
                   </h2>
+                   <div className="mb-4">
+                  <input
+                    type="text"
+                    id="endpointName"
+                    name="endpointName"
+                    value={uploadFormData.endpointName}
+                    onChange={handleUploadInput}
+                    className="w-full px-4 py-2 text-gray-800 dark:text-gray-200 dark:bg-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your name"
+                  />
+                </div>
                   <div className='block w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-4'>
                   <input
                     type="file"
-                    accept=".png"
+                    accept=".csv"
                     onChange={handleFileUpload}
                   />
                   </div>
                   <div>
                   <button
                     className="btn-xl bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 shadow-sm shadow-black/[0.08] rounded-full p-2 hover:bg-gray-600 hover:dark:bg-gray-300 w-full mt-4"
-                    onClick={() => setCreateEndpoint(!createEndpoint)}
+                    onClick={handleCsvUpload}
                   >
                     Upload and Create
                   </button>
